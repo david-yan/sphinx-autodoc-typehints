@@ -246,9 +246,35 @@ def test_sphinx_output(app, status, warning, always_document_param_types):
 
               * **z** ("Optional"["str"]) – baz
 
+           x
+
+              Multiline
+
+              Description
+
+              Type:
+                 "bool"
+
+           y
+
+              bar
+
+              Type:
+                 "int"
+
+           z
+         
+              baz
+
+              Type:
+                 "ClassVar"["str"]
+
            class InnerClass
 
               Inner class.
+
+              Variables:
+                 **x** ("bool") -- foo
 
               _InnerClass__dunder_inner_method(x)
 
@@ -269,6 +295,8 @@ def test_sphinx_output(app, status, warning, always_document_param_types):
 
                  Return type:
                     "str"
+
+              x: bool = None
 
            _Class__dunder_method(x)
 
@@ -356,12 +384,27 @@ def test_sphinx_output(app, status, warning, always_document_param_types):
               Return type:
                  "str"
 
+           x: bool = None
+
+           y: int = None
+
+           z: ClassVar[str] = None
+
         exception dummy_module.DummyException(message)
 
            Exception docstring
 
+           message
+
+              Message description
+
+              Type:
+                 "str"
+
            Parameters:
               **message** ("str") – blah
+
+           message: str = None
 
         dummy_module.function(x, y, z_=None)
 
