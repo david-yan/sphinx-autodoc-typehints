@@ -263,7 +263,7 @@ def test_sphinx_output(app, status, warning, always_document_param_types):
                  "int"
 
            z
-         
+
               baz
 
               Type:
