@@ -420,22 +420,30 @@ def process_docstring(app, what, name, obj, options, lines):
             formatted_annotation = format_annotation(
                 type_hints['return'], fully_qualified=app.config.typehints_fully_qualified)
 
-            insert_index = len(lines)
+            type_index = None
+            desc_index = None
             for i, line in enumerate(lines):
                 if line.startswith(':rtype:'):
-                    insert_index = None
-                    break
+                    type_index = i
                 elif line.startswith(':return:') or line.startswith(':returns:'):
-                    insert_index = i
+                    desc_index = i
 
-            if insert_index is not None and app.config.typehints_document_rtype:
-                if insert_index == len(lines):
+            if app.config.typehints_document_rtype:
+                if desc_index is None and type_index is not None:
+                    # The description has been put into the type hint by napoleon.
+                    desc = lines[type_index][len(':rtype: '):]
+                    del lines[type_index]
+                    lines.insert(type_index, ':return: {}'.format(desc))
+                    lines.insert(type_index+1, ':rtype: {}'.format(formatted_annotation))
+
+                elif type_index is None:
+                    insert_index = len(lines) if desc_index is None else desc_index
                     # Ensure that :rtype: doesn't get joined with a paragraph of text, which
                     # prevents it being interpreted.
-                    lines.append('')
-                    insert_index += 1
-
-                lines.insert(insert_index, ':rtype: {}'.format(formatted_annotation))
+                    if insert_index == len(lines):
+                        lines.append('')
+                        insert_index += 1
+                    lines.insert(insert_index, ':rtype: {}'.format(formatted_annotation))
 
 
 def builder_ready(app):

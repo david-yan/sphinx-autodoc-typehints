@@ -13,6 +13,8 @@ Dummy Module
 
 .. autofunction:: dummy_module.function
 
+.. autofunction:: dummy_module.function_with_wrong_rtype
+
 .. autofunction:: dummy_module.function_with_escaped_default
 
 .. autofunction:: dummy_module.function_with_unresolvable_annotation

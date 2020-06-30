@@ -296,7 +296,7 @@ def test_sphinx_output(app, status, warning, always_document_param_types):
                  Return type:
                     "str"
 
-              x: bool = None
+              x: bool
 
            _Class__dunder_method(x)
 
@@ -384,11 +384,11 @@ def test_sphinx_output(app, status, warning, always_document_param_types):
               Return type:
                  "str"
 
-           x: bool = None
+           x: bool
 
-           y: int = None
+           y: int
 
-           z: ClassVar[str] = None
+           z: ClassVar[str]
 
         exception dummy_module.DummyException(message)
 
@@ -404,7 +404,7 @@ def test_sphinx_output(app, status, warning, always_document_param_types):
            Parameters:
               **message** ("str") – blah
 
-           message: str = None
+           message: str
 
         dummy_module.function(x, y, z_=None)
 
@@ -422,6 +422,19 @@ def test_sphinx_output(app, status, warning, always_document_param_types):
 
            Return type:
               bytes
+
+        dummy_module.function_with_wrong_rtype(x)
+
+           Function docstring.
+
+           Parameters:
+              **x** ("str") – foo
+
+           Returns:
+              description
+
+           Return type:
+              "int"
 
         dummy_module.function_with_escaped_default(x='\\\\x08')
 

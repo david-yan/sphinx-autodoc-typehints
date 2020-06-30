@@ -158,6 +158,15 @@ def function(x: bool, y: int, z_: typing.Optional[str] = None) -> str:
     """
 
 
+def function_with_wrong_rtype(x: str) -> int:
+    """
+    Function docstring.
+
+    :param x: foo
+    :rtype: description
+    """
+
+
 def function_with_escaped_default(x: str = '\b'):
     """
     Function docstring.
