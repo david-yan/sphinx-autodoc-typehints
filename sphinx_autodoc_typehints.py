@@ -422,20 +422,28 @@ def process_docstring(app, what, name, obj, options, lines):
 
             type_index = None
             desc_index = None
+            empty_return = None
             for i, line in enumerate(lines):
                 if line.startswith(':rtype:'):
                     type_index = i
-                elif line.startswith(':return:') or line.startswith(':returns:'):
-                    desc_index = i
+                elif line.startswith(':returns:'):
+                    if line != ':returns:':
+                        desc_index = i
+                    else:
+                        # Napoleon will inject an empty :returns: if no return description is provided.
+                        empty_return = i
+            if empty_return:
+                del lines[empty_return]
+                if type_index > empty_return:
+                    type_index -= 1
 
             if app.config.typehints_document_rtype:
                 if desc_index is None and type_index is not None:
                     # The description has been put into the type hint by napoleon.
                     desc = lines[type_index][len(':rtype: '):]
                     del lines[type_index]
-                    lines.insert(type_index, ':return: {}'.format(desc))
+                    lines.insert(type_index, ':returns: {}'.format(desc))
                     lines.insert(type_index+1, ':rtype: {}'.format(formatted_annotation))
-
                 elif type_index is None:
                     insert_index = len(lines) if desc_index is None else desc_index
                     # Ensure that :rtype: doesn't get joined with a paragraph of text, which
