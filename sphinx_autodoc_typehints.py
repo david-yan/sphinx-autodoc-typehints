@@ -426,6 +426,7 @@ def process_docstring(app, what, name, obj, options, lines):
                 if line.startswith(':rtype:'):
                     type_index = i
                 elif line.startswith(':return:') or line.startswith(':returns:'):
+                    print("found return")
                     desc_index = i
 
             if app.config.typehints_document_rtype:
