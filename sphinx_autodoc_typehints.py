@@ -1,4 +1,5 @@
 import inspect
+import re
 import sys
 import textwrap
 import typing
@@ -452,6 +453,29 @@ def process_docstring(app, what, name, obj, options, lines):
                         lines.append('')
                         insert_index += 1
                     lines.insert(insert_index, ':rtype: {}'.format(formatted_annotation))
+            
+            # Remove automatically generated bullet lists from multiline return descriptions.
+            found_return = False
+            begin_return = None
+            end_return = None
+            for i, line in enumerate(lines):
+                if not found_return and line.startswith(':returns:'):
+                    begin_return = i
+                    found_return = True
+                if found_return and re.findall(':.+:^', line):
+                    end_return = i
+                    break
+            end_return = end_return if end_return else len(lines)
+            
+            if found_return and '* ' in lines[begin_return]:
+                lines[begin_return] = ''.join(lines[begin_return].split('* ', 1))
+                for i in range(begin_return+1, end_return):
+                    if '* ' in lines[i]:
+                        lines[i] = lines[i].split('* ', 1)[1]
+                # Merge return lines into one.
+                lines[begin_return] = ' '.join(lines[begin_return:end_return - 1])
+                for i in range(end_return - 1, begin_return, -1):
+                    del lines[i]
 
 
 def builder_ready(app):
